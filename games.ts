@@ -1,9 +1,18 @@
-var Leitor = require('readline-sync')
+var rl = require('readline-sync')
 
-class Jogos {
- titulo: string
-protected genero: string
-protected classificacaoEtaria: number
+export interface Jogointerface{
+titulo: string
+genero: string
+classificacaoEtaria: number
+getDetalhes(): void
+setDuvidas(): void
+}
+
+
+export class Jogo implements Jogointerface{
+public titulo: string
+public genero: string
+public classificacaoEtaria: number
 constructor(titulo: string, genero: string, classificacaoEtaria: number) {
     this.titulo = titulo
     this.genero = genero
@@ -17,21 +26,32 @@ constructor(titulo: string, genero: string, classificacaoEtaria: number) {
 
 
 public setDuvidas(): void{
-    let tituloUp = Leitor.question('Qual é o título do jogo?')
-    let generoUp = Leitor.question('Qual é o gênero do jogo?')
-    let classificacaoUp = Leitor.question('Qual é a classificação etária do jogo?')
+    let tituloUp = rl.question('Qual é o título do jogo?')
+    let generoUp = rl.question('Qual é o gênero do jogo?')
+    let classificacaoUp = rl.question('Qual é a classificação etária do jogo?')
     this.titulo = tituloUp
     this.genero = generoUp
     this.classificacaoEtaria = classificacaoUp
 }
 }
 
-class JogoEletronico extends Jogos{
+
+
+export interface JogoEletronicoInterface {
+titulo: string
+genero: string
+classificacaoEtaria: number
+getDetalhes(): void
+setDuvidas(): void
+}
+
+export class JogoEletronico extends Jogo implements JogoEletronicoInterface{
+
     protected plataforma: string
-    super(titulo: string, genero: string, classificacaoEtaria: number, plataforma: string){
-    this.titulo = titulo
-    this.genero = genero
-    this.classificacaoEtaria = classificacaoEtaria
+    constructor(titulo: string, genero: string, classificacaoEtaria: number, plataforma: string){
+    
+        super(titulo, genero, classificacaoEtaria)
+
     this.plataforma = plataforma
 
 }
@@ -41,10 +61,10 @@ public getDetalhes(): string{
 }
 
  public setDuvidas(): void{
-    let tituloUp = Leitor.question('Qual é o título do jogo?')
-    let generoUp = Leitor.question('Qual é o gênero do jogo?')
-    let classificacaoUp = Leitor.question('Qual é a classificação etária do jogo?')
-    let plataformaUp = Leitor.question('Qual é a plataforma do jogo?')
+    let tituloUp = rl.question('Qual é o título do jogo?')
+    let generoUp = rl.question('Qual é o gênero do jogo?')
+    let classificacaoUp = rl.question('Qual é a classificação etária do jogo?')
+    let plataformaUp = rl.question('Qual é a plataforma do jogo?')
     this.titulo = tituloUp
     this.genero = generoUp
     this.classificacaoEtaria = classificacaoUp
@@ -52,13 +72,23 @@ public getDetalhes(): string{
 }
 }
 
-class JogoDeTabuleiro extends Jogos{
+
+export interface JogoDeTabuleiroInterface{
+titulo: string
+genero: string
+classificacaoEtaria: number
+getDetalhes(): void
+setDuvidas(): void
+}
+
+export class JogoDeTabuleiro extends Jogo implements JogoDeTabuleiroInterface{
     protected jogadores: number
-    super(titulo: string, genero: string, classificacaoEtaria: number, jogadores:number){
-    this.titulo = titulo
-    this.genero = genero
-    this.classificacaoEtaria = classificacaoEtaria
+   constructor(titulo: string, genero: string, classificacaoEtaria: number, jogadores:number){
+   
+    super(titulo, genero, classificacaoEtaria)
+
     this.jogadores = jogadores
+    
     }
 
     public getDetalhes(): string {
@@ -66,29 +96,59 @@ class JogoDeTabuleiro extends Jogos{
      }
 
      public setDuvidas(): void{
-        let tituloUp = Leitor.question('Qual é o título do jogo?')
-        let generoUp = Leitor.question('Qual é o gênero do jogo?')
-        let classificacaoUp = Leitor.question('Qual é a classificação etária do jogo?')
-        let jogadoresUp = Leitor.question('Qual é a quantidade de jogadores?')
+        let tituloUp = rl.question('Qual é o título do jogo?')
+        let generoUp = rl.question('Qual é o gênero do jogo?')
+        let classificacaoUp = rl.question('Qual é a classificação etária do jogo?')
+        let jogadoresUp = rl.question('Qual é a quantidade de jogadores?')
         this.titulo = tituloUp
         this.genero = generoUp
         this.classificacaoEtaria = classificacaoUp
         this.jogadores = jogadoresUp
     }
+
+
 }
 
-class BibliotecaJogo {
-    private jogos : Jogos[]
 
-    adicionarJogo(jogos: Jogos): void{
-    this.jogos.push(jogos)
-    } 
-
-
-    removerJogo(titulo: string): void{
-    }
-
-    listarJogos(): string {
-
+export interface BibliotecaDeJogosInterface{
+    jogos: Jogo[]
+    addJogo(jogo: Jogo): void
+    removerJogo(): void
+    listarJogo(): void
 }
+
+
+export class BibliotecaDeJogos implements BibliotecaDeJogosInterface{
+    jogos: Jogo[]
+    constructor(){
+        this.jogos = []
+}
+
+public addJogo(jogo: Jogo): void{
+    this.jogos.push(jogo)
+}
+
+public removerJogo(): void{
+    console.log(this.jogos)
+    let titulo = rl.question('Insira o titulo para excluir o jogo: ')
+    this.jogos = this.jogos.filter(jogo => jogo.titulo !== titulo)
+}
+
+public listarJogo(): void{
+    console.log(this.jogos)
+}
+}
+
+let jogoUm = new Jogo('banana','chiclete',18) 
+let jogoDois = new Jogo('free fire','acao',12)
+let jogoTres = new Jogo('fortinite','acao',16)  
+
+let estante = new BibliotecaDeJogos()
+
+estante.addJogo(jogoUm)
+estante.addJogo(jogoDois)
+estante.addJogo(jogoTres)
+
+
+
 
