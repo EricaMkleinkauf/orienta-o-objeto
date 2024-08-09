@@ -1,81 +1,74 @@
 var rl = require('readline-sync')
 
-
-export class carro {
-    tanque: number
-    km: number
-    marca: String 
-    distancia: number
-    constructor(tanque: number, km: number, marca: String,  distancia: number) {
-        this.tanque = tanque
-        this.km = km
+export class Carro {
+    carro: string
+    gasolina: number
+    marca: string
+    kmL: number
+    constructor(carro: string, gasolina: number, marca: string, kmL: number) {
+        this.carro = carro
+        this.gasolina = gasolina
         this.marca = marca
-        this.distancia = distancia
-    
+        this.kmL = kmL
+
     }
 
-    getCarro(): void{
-        console.log(`Marca: ${this.marca} \nTanque: ${this.tanque} \nKm: ${this.km} \nDistancia: ${
-            this.distancia} \n`)
+    andar(km: number): void {
+        let anda = this.gasolina - (km / this.kmL)
+        if (anda <= 0) {
+            console.log("O carro não pode andar")
+        }
+        else {
+            this.gasolina = anda
+            console.log(`Sobrou ${this.gasolina} litros de gasosa`)
+        }
     }
-
-    setCarro(): void{
-        let tanqueUp = rl.questionInt('Digite o tanque do carro: ')
-        let kmUp = rl.questionInt('Digite a quilometragem do carro: ')  
-        let marcaUp= rl.question('Digite a marca do carro: ')
-        let distanciaUp = rl.questionInt('Digite a distancia que deseja percorrer: ')
-        this.tanque = tanqueUp
-        this.km = kmUp
+    // esse metodo serve para mostrar as informacoes do carro
+    getCarro(): void {
+        console.log(`Carro: ${this.carro} \nMarca: ${this.marca} \nGasolina: ${this.gasolina} \nkmL: ${this.kmL}`)
+    }
+    // esse metodo serve para abastecer o carro
+    abastecer(valor: number): void {
+        this.gasolina += valor
+    }
+    // esse metodo serve para imprimir a gasolina  
+    obterGasolina(): number {
+        return this.gasolina
+    }
+    // esse metodo serve para editar o carro
+    setCarro(): void {
+        let carroUp = rl.question('qual e o carro? ')
+        let marcaUp = rl.question('Qual é a marca do carro? ')
+        let gasolinaUp = rl.questionInt('Quanto de gasolina voce tem? ')
+        let kmLUp = rl.questionInt('Quantos km/L seu carro faz? ')
+        this.carro = carroUp
         this.marca = marcaUp
-        this.distancia = distanciaUp
-        
+        this.gasolina = gasolinaUp
+        this.kmL = kmLUp
+
     }
 
-   andar(): void{
-   let distancia = rl.questionInt ('Quantos Km voce quer anda?')
-    let litros = distancia / this.km
-    let viagem = this.tanque - (this.km/ this.distancia)
-    if (litros > this.tanque) {
-        console.log (`Voce não tem gasolina para andar ${distancia} Km`)
+}
+
+export class Garragem {
+    carros: Carro[]
+    constructor() {
+        this.carros = []
+    }
+    // esse metodo serve para adicionar carros na garragem
+    public addCarros(carro: Carro): void {
+        this.carros.push(carro)
+        if (this.carros.length >= 10) {
+            console.log("A garagem está cheia")
         } else {
-            this.tanque -= viagem
-            console.log (`Voce tem gasolina para andar ${distancia} Km`)
-   }
+            console.log("Carro adicionado com sucesso")
+        }
 
-}
+    }
+    // esse metodo serve para mostrar os carros da garragem
+    public getCarros(): void {
+        for (let i = 0; i < this.carros.length; i++) {
+        }
 
-    obterGasolina(): void {
-        let litros = rl.questionInt('qual o nivel atual de gasolina?: ')
-        this.tanque = litros
-}
-
-    adicionarGasolina(): void{
-        let litros = rl.questionInt('Digite a quantidade de litros que deseja adicionar: ')
-        this.tanque += litros
     }
 }
-
-
-export class garagem{
-    Carro: carro[]
-    constructor(){
-        this.Carro = []
-    }
-     addCarro(carro: carro): void{
-        if(this.Carro.length >= 10)
-        console.log('A garagem está cheia')
-    else
-    this.Carro.push(carro)
-    }
-
-
-    removerCarro(): void{
-        console.log(this.Carro)
-        let remover = rl.question('Insira o titulo para excluir o carro: ')
-        this.Carro = this.Carro.filter(carro => carro.marca !== remover)
-    }
-    
-} 
-
-
-
